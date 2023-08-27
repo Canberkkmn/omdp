@@ -1,6 +1,7 @@
-OMDb movie database project
+# OMDb movies
+Project is getting movies from OMDb and shows them in a data table. Also you can click to see details page for that movie.
 
-Used Tecgnologies
+## Tech Stack
 - ReactJS
 - TypeScript
 - Redux
@@ -9,9 +10,17 @@ Used Tecgnologies
 - Scss
 
 
-Installation
-
+## Installation
 cd into the project directory and run:
 
-1- yarn
-2- yarn dev
+````
+cd omdp
+
+yarn
+
+yarn dev
+````
+
+## Authors
+
+- [@Canberkkmn](https://github.com/Canberkkmn)
