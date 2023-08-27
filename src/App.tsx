@@ -1,21 +1,32 @@
+import { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import Home from "./views/home";
 import ErrorPage from "./views/error";
-import MoviePage from "./views/movie";
+import SplashScreen from "./components/common/SplashScreen/SplashScreen";
 
 import "./App.scss";
+
+const HomePageLazy = lazy(() => import("./views/home"));
+const MoviePageLazy = lazy(() => import("./views/movie"));
 
 function App() {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Home />,
+      element: (
+        <Suspense fallback={<SplashScreen />}>
+          <HomePageLazy />
+        </Suspense>
+      ),
       errorElement: <ErrorPage />,
     },
     {
       path: "/item/:id",
-      element: <MoviePage />,
+      element: (
+        <Suspense fallback={<SplashScreen />}>
+          <MoviePageLazy />
+        </Suspense>
+      ),
       errorElement: <ErrorPage />,
     },
   ]);

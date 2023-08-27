@@ -201,7 +201,7 @@ const MoviePage: FC = () => {
                   ))}
                 </Box>
 
-                {movieData.Ratings.length > 0 && (
+                {movieData.Ratings && movieData.Ratings.length > 0 && (
                   <Box mt={3}>
                     <Typography variant="subtitle2">Ratings</Typography>
                     {movieData.Ratings.map((rating, index) => (
