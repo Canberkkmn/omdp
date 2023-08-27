@@ -30,8 +30,6 @@ const MoviePage: FC = () => {
     );
   }, [dispatch, location.pathname]);
 
-  console.log(movieData);
-
   return (
     <>
       {loading && <SplashScreen />}
