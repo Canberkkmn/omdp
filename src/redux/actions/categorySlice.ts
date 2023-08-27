@@ -7,16 +7,20 @@ export const fetchData = createAsyncThunk(
   async (payload: ApiCallPayload) => {
     let url = `${apiUrl}?r=json&apikey=${apiKey}`;
 
-    if (payload.title !== "") {
+    if (payload.title && payload.title !== "") {
       url += `&s=${payload.title}`;
     }
 
-    if (payload.page !== 0) {
+    if (payload.page && payload.page !== 0) {
       url += `&page=${payload.page}`;
     }
 
-    if (payload.year !== 0) {
+    if (payload.year && payload.year !== 0) {
       url += `&y=${payload.year}`;
+    }
+
+    if (payload.type && payload.type !== "None" && payload.type !== "") {
+      url += `&type=${payload.type}`;
     }
 
     const response = await fetch(url);

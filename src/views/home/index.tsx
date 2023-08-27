@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import SplashScreen from "../../components/common/SplashScreen/SplashScreen";
 import MovieTable from "../../components/home/DataTable/DataTable";
+import Dropdown from "../../components/home/Dropdown/Dropdown";
 import Filter from "../../components/home/Filter/Filter";
 import Header from "../../components/home/Header/Header";
 import SearchButton from "../../components/home/SearchButton/SearchButton";
@@ -20,6 +21,7 @@ const Home: FC = () => {
   const [page, setPage] = useState<number>(1);
   const [title, setTitle] = useState<string>("Pokemon");
   const [year, setYear] = useState<string>("");
+  const [type, setType] = useState<string>("");
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -46,9 +48,10 @@ const Home: FC = () => {
 
     dispatch(
       fetchData({
-        title: title,
+        title: title.trim(),
         page: 1,
         year: Number(year),
+        type: type.trim(),
       })
     );
   };
@@ -74,6 +77,14 @@ const Home: FC = () => {
   };
 
   /**
+   * Handle dropdown change.
+   *
+   */
+  const handleDropdownChange = (newType: string) => {
+    setType(newType);
+  };
+
+  /**
    * Handle pagination change.
    * Fetch data for new page.
    *
@@ -88,6 +99,7 @@ const Home: FC = () => {
         title: title,
         page: newPage,
         year: Number(year),
+        type: type,
       })
     );
   };
@@ -110,6 +122,7 @@ const Home: FC = () => {
           onChangeHandler={handleTitleChange}
         />
         <Filter type="year" value={year} onChangeHandler={handleYearChange} />
+        <Dropdown value={type} onChangeHandler={handleDropdownChange} />
         <SearchButton onClickHandler={handleSearchButtonClick} />
       </div>
 

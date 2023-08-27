@@ -16,4 +16,5 @@ export interface ApiCallPayload {
   title: string;
   page: number;
   year?: number;
+  type?: string;
 }
