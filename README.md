@@ -1,5 +1,5 @@
 # OMDb movies
-Project is getting movies from OMDb and shows them in a data table. Also you can click to see details page for that movie.
+This project gets movies from OMDb and shows them in a data table. Also you can click to see details page for that movie.
 
 ## Tech Stack
 - ReactJS
