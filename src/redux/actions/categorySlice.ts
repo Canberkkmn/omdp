@@ -48,16 +48,12 @@ const apiSlice = createSlice({
         state.apiData = action.payload;
         state.loading = false;
         state.error = null;
-
-        window.scrollTo({ top: 0, behavior: "smooth" });
       })
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .addCase(fetchData.rejected, (state, _action) => {
         state.apiData = null;
         state.loading = false;
         state.error = "An error occurred while fetching data.";
-
-        window.scrollTo({ top: 0, behavior: "smooth" });
       });
   },
 });

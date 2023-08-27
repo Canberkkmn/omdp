@@ -12,6 +12,11 @@ function App() {
       element: <Home />,
       errorElement: <ErrorPage />,
     },
+    {
+      path: "/item/:id",
+      element: <div>Item</div>,
+      errorElement: <ErrorPage />,
+    },
   ]);
 
   return (

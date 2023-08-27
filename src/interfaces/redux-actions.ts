@@ -1,4 +1,5 @@
 export interface SearchResult {
+  id?: string;
   Title: string;
   Year: string;
   imdbID: string;

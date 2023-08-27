@@ -1,5 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useNavigate, useSearchParams, useLocation } from "react-router-dom";
+
 import SplashScreen from "../../components/common/SplashScreen/SplashScreen";
 import MovieTable from "../../components/home/DataTable/DataTable";
 import Dropdown from "../../components/home/Dropdown/Dropdown";
@@ -13,30 +15,82 @@ import { AppDispatch } from "../../redux/store/store";
 
 import "./index.scss";
 
+interface ISearchParams extends URLSearchParams {
+  size: number;
+}
+
 const Home: FC = () => {
   const apiData = useSelector((state: RootState) => state.api.apiData);
   const loading = useSelector((state: RootState) => state.api.loading);
   const error = useSelector((state: RootState) => state.api.error);
 
-  const [page, setPage] = useState<number>(1);
-  const [title, setTitle] = useState<string>("Pokemon");
-  const [year, setYear] = useState<string>("");
-  const [type, setType] = useState<string>("");
+  // eslint-disable-next-line prefer-const
+  let [searchParams, setSearchParams] = useSearchParams();
+
+  const [page, setPage] = useState<number>(
+    Number(searchParams.get("page")) || 1
+  );
+  const [title, setTitle] = useState<string>(
+    searchParams.get("title") || "Pokemon"
+  );
+  const [year, setYear] = useState<string>(searchParams.get("year") || "");
+  const [type, setType] = useState<string>(searchParams.get("type") || "");
+  const [initialCheck, setInitialCheck] = useState<boolean>(true);
 
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    setPage(Number(searchParams.get("page")) || 1);
+    setTitle(searchParams.get("title") || "Pokemon");
+    setYear(searchParams.get("year") || "");
+    setType(searchParams.get("type") || "");
+  }, [location, searchParams]);
 
   /**
    * Fetch data on page load.
    * Currently fetching data for Pokemon.
    */
   useEffect(() => {
-    dispatch(
-      fetchData({
-        title: "Pokemon",
-        page: 1,
-      })
-    );
-  }, [dispatch]);
+    if (initialCheck) {
+      dispatch(
+        fetchData({
+          title: searchParams.get("title") || "Pokemon",
+          page: Number(searchParams.get("page")) || 1,
+          year: Number(searchParams.get("year")),
+          type: searchParams.get("type") || "",
+        })
+      );
+
+      setSearchParams({
+        title: searchParams.get("title") || "Pokemon",
+        page: searchParams.get("page") || "1",
+        year: searchParams.get("year") || "",
+        type: searchParams.get("type") || "",
+      });
+
+      setInitialCheck(false);
+    }
+  }, [dispatch, searchParams, setSearchParams, initialCheck]);
+
+  /**
+   * Fetch data on search params change.
+   *
+   * @returns void
+   */
+  useEffect(() => {
+    if (!initialCheck && ((searchParams as ISearchParams).size as number) > 0) {
+      dispatch(
+        fetchData({
+          title: searchParams.get("title") || "Pokemon",
+          page: Number(searchParams.get("page")) || 1,
+          year: Number(searchParams.get("year")),
+          type: searchParams.get("type") || "",
+        })
+      );
+    }
+  }, [dispatch, initialCheck, searchParams]);
 
   /**
    * Fetch data on search button click and reset page to 1.
@@ -46,14 +100,12 @@ const Home: FC = () => {
   const handleSearchButtonClick = () => {
     setPage(1);
 
-    dispatch(
-      fetchData({
-        title: title.trim(),
-        page: 1,
-        year: Number(year),
-        type: type.trim(),
-      })
-    );
+    setSearchParams({
+      title: title.trim(),
+      page: "1",
+      year: year,
+      type: type.trim(),
+    });
   };
 
   /**
@@ -94,21 +146,19 @@ const Home: FC = () => {
   const handlePageChange = (newPage: number) => {
     setPage(newPage);
 
-    dispatch(
-      fetchData({
-        title: title,
-        page: newPage,
-        year: Number(year),
-        type: type,
-      })
-    );
+    setSearchParams({
+      title: title,
+      page: newPage.toString(),
+      year: year,
+      type: type,
+    });
   };
 
   /**
    * Handle row click.
    */
-  const handleRowClick = (row: SearchResult[]) => {
-    console.log(row);
+  const handleRowClick = (row: SearchResult) => {
+    navigate(`/item/${row.id}`);
   };
 
   return (
@@ -128,20 +178,18 @@ const Home: FC = () => {
 
       {loading && <SplashScreen />}
 
-      <>
-        {error && <p>Error: {error}</p>}
+      {error && <p>Error: {error}</p>}
 
-        {apiData && (
-          <>
-            <MovieTable
-              data={apiData}
-              handlePageChange={handlePageChange}
-              handleRowClick={handleRowClick}
-              page={page}
-            />
-          </>
-        )}
-      </>
+      {apiData && (
+        <>
+          <MovieTable
+            data={apiData}
+            handlePageChange={handlePageChange}
+            handleRowClick={handleRowClick}
+            page={page}
+          />
+        </>
+      )}
     </div>
   );
 };
