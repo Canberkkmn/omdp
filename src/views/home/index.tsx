@@ -9,7 +9,7 @@ import Filter from "../../components/home/Filter/Filter";
 import Header from "../../components/home/Header/Header";
 import SearchButton from "../../components/home/SearchButton/SearchButton";
 import { SearchResult } from "../../interfaces/redux-actions";
-import { fetchData } from "../../redux/actions/categorySlice";
+import { fetchData } from "../../redux/actions/ApiSlice";
 import { RootState } from "../../redux/reducers";
 import { AppDispatch } from "../../redux/store/store";
 
@@ -63,12 +63,14 @@ const Home: FC = () => {
         })
       );
 
-      setSearchParams({
-        title: searchParams.get("title") || "Pokemon",
-        page: searchParams.get("page") || "1",
-        year: searchParams.get("year") || "",
-        type: searchParams.get("type") || "",
-      });
+      if (((searchParams as ISearchParams).size as number) === 0) {
+        setSearchParams({
+          title: searchParams.get("title") || "Pokemon",
+          page: searchParams.get("page") || "1",
+          year: searchParams.get("year") || "",
+          type: searchParams.get("type") || "",
+        });
+      }
 
       setInitialCheck(false);
     }
@@ -163,7 +165,7 @@ const Home: FC = () => {
 
   return (
     <div>
-      <Header />
+      <Header value="OMDb Data Table" />
 
       <div className="filterWrapper">
         <Filter

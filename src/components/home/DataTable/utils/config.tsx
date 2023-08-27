@@ -3,10 +3,9 @@ import {
   GridColDef,
   GridSingleSelectColDef,
 } from "@mui/x-data-grid";
+import { notFoundPoster } from "../../../../constants/const";
 
 const imageCellRenderer = (params: GridCellParams) => {
-  const notFoundPoster = "https://i.stack.imgur.com/y9DpT.jpg";
-
   return (
     <img
       src={

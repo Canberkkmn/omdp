@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import Home from "./views/home";
 import ErrorPage from "./views/error";
+import MoviePage from "./views/movie";
 
 import "./App.scss";
 
@@ -14,7 +15,7 @@ function App() {
     },
     {
       path: "/item/:id",
-      element: <div>Item</div>,
+      element: <MoviePage />,
       errorElement: <ErrorPage />,
     },
   ]);

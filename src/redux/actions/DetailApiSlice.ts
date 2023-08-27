@@ -1,39 +1,26 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { apiKey, apiUrl } from "../../constants/const";
-import { ApiCallPayload, ApiResponse } from "../../interfaces/redux-actions";
+import {
+  DetailApiCallPayload,
+  DetailApiResponse,
+} from "../../interfaces/redux-actions";
 
 export const fetchData = createAsyncThunk(
   "api/fetchData",
-  async (payload: ApiCallPayload) => {
-    let url = `${apiUrl}?r=json&apikey=${apiKey}`;
-
-    if (payload.title && payload.title !== "") {
-      url += `&s=${payload.title}`;
-    }
-
-    if (payload.page && payload.page !== 0) {
-      url += `&page=${payload.page}`;
-    }
-
-    if (payload.year && payload.year !== 0) {
-      url += `&y=${payload.year}`;
-    }
-
-    if (payload.type && payload.type !== "None" && payload.type !== "") {
-      url += `&type=${payload.type}`;
-    }
+  async (payload: DetailApiCallPayload) => {
+    const url = `${apiUrl}?r=json&apikey=${apiKey}&i=${payload.imdbID}`;
 
     const response = await fetch(url);
-    const data: ApiResponse = await response.json();
+    const data: DetailApiResponse = await response.json();
 
     return data;
   }
 );
 
-const apiSlice = createSlice({
-  name: "api",
+const detailApiSlice = createSlice({
+  name: "detailApi",
   initialState: {
-    apiData: null as ApiResponse | null,
+    detailData: null as DetailApiResponse | null,
     loading: false,
     error: null as string | null,
   },
@@ -45,17 +32,17 @@ const apiSlice = createSlice({
         state.error = null;
       })
       .addCase(fetchData.fulfilled, (state, action) => {
-        state.apiData = action.payload;
+        state.detailData = action.payload;
         state.loading = false;
         state.error = null;
       })
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .addCase(fetchData.rejected, (state, _action) => {
-        state.apiData = null;
+        state.detailData = null;
         state.loading = false;
         state.error = "An error occurred while fetching data.";
       });
   },
 });
 
-export default apiSlice.reducer;
+export default detailApiSlice.reducer;

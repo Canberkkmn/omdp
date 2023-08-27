@@ -1,7 +1,11 @@
 import { Typography } from "@mui/material";
 import { FC } from "react";
 
-const Header: FC = () => {
+interface IProps {
+  value?: string;
+}
+
+const Header: FC<IProps> = ({ value }) => {
   return (
     <Typography
       variant="h4"
@@ -9,7 +13,7 @@ const Header: FC = () => {
         textAlign: "center",
       }}
     >
-      OMDb Data Table
+      {value}
     </Typography>
   );
 };
